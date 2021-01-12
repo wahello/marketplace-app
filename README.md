@@ -6,6 +6,8 @@
 
 Browse and manage plugins from within Grafana.
 
+**IMPORTANT:** This plugin is **NOT** production-ready. Use it at your own risk.
+
 ## Configuration
 
 | Option | Description |
