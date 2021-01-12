@@ -8,6 +8,22 @@ Browse and manage plugins from within Grafana.
 
 **IMPORTANT:** This plugin is **NOT** production-ready. Use it at your own risk.
 
+## Installation
+
+Marketplace hasn't yet been published to [grafana.com](https://grafana.com/plugins), but you can install it using [grafana-cli](https://grafana.com/docs/grafana/latest/administration/cli/#grafana-cli):
+
+1. Install the plugin using [grafana-cli](https://grafana.com/docs/grafana/latest/administration/cli/#grafana-cli):
+
+   ```
+   grafana-cli --pluginUrl=https://github.com/grafana/marketplace-app/releases/download/v0.1.0/grafana-marketplace-app-0.1.0.zip plugins install grafana-marketplace-app
+   ```
+
+1. Restart the Grafana server
+1. Navigate to **Configuration** -> **Plugins** and click on the Marketplace plugin in the list
+1. Click the **Enable app** to enable the plugin
+1. Click the **Pin app** to add it to the side menu
+1. Configure the directory where you want to install your plugins, e.g. `/var/lib/grafana/plugins`
+
 ## Configuration
 
 | Option | Description |
