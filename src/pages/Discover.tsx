@@ -25,7 +25,7 @@ export const Discover = ({ meta }: AppRootProps) => {
       .then(res => {
         setPlugins(res.items.filter((plugin: Plugin) => plugin.versionSignatureType || showUnsigned));
       });
-  }, []);
+  }, [showUnsigned]);
 
   const styles = getStyles(theme);
 

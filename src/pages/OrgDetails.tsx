@@ -13,7 +13,7 @@ export const OrgDetails = ({ query, meta }: AppRootProps) => {
   const { orgSlug } = query;
   const { showUnsigned } = meta.jsonData as MarketplaceAppSettings;
 
-  const [plugins, setPlugins] = useState<Array<Plugin>>([]);
+  const [plugins, setPlugins] = useState<Plugin[]>([]);
 
   useEffect(() => {
     getBackendSrv()
@@ -25,7 +25,7 @@ export const OrgDetails = ({ query, meta }: AppRootProps) => {
             .filter((plugin: Plugin) => plugin.versionSignatureType || showUnsigned)
         );
       });
-  }, []);
+  }, [orgSlug, showUnsigned]);
 
   return (
     <>

@@ -42,7 +42,7 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
       .then((res: any[]) => {
         setInstalled(!!res.find(_ => _ === slug));
       });
-  }, [slug]);
+  }, [slug, pluginDir]);
 
   const onInstall = () => {
     setLoading(true);
