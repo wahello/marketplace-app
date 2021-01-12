@@ -1,4 +1,4 @@
-module github.com/grafana/grafana-marketplace-app
+module github.com/grafana/marketplace-app
 
 go 1.14
 
