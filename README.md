@@ -5,3 +5,12 @@
 [![License](https://img.shields.io/github/license/grafana/grafana-marketplace-app)](LICENSE)
 
 Browse and manage plugins from within Grafana.
+
+## Configuration
+
+| Option | Description |
+|--------|-------------|
+| _Enable app_ | Must be done before being able to use the plugin. |
+| _Pin app_ | Add the app to the side menu. |
+| _Show unsigned plugins_ | Show unsigned plugins in the marketplace. |
+| _Plugin directory_ | Directory where plugins should be installed to. |
