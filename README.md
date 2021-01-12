@@ -1,21 +1,7 @@
-# Simple App Plugin
+# Marketplace for Grafana
 
-This is just a stub to show how you can create a basic visualization plugin.
+[![Build](https://github.com/grafana/grafana-marketplace-app/workflows/CI/badge.svg)](https://github.com/grafana/grafana-marketplace-app/actions?query=workflow%3A%22CI%22)
+[![Release](https://github.com/grafana/grafana-marketplace-app/workflows/Release/badge.svg)](https://github.com/grafana/grafana-marketplace-app/actions?query=workflow%3ARelease)
+[![License](https://img.shields.io/github/license/grafana/grafana-marketplace-app)](LICENSE)
 
-To work with this plugin run:
-```
-yarn dev
-```
-
-or
-```
-yarn watch
-```
-
-This will run linting tools and apply prettier fix.
-
-
-To build the plugin run:
-```
-yarn build
-```
+Browse and manage plugins from within Grafana.
