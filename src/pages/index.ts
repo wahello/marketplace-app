@@ -4,6 +4,7 @@ import { Discover } from './Discover';
 import { Browse } from './Browse';
 import { PluginDetails } from './PluginDetails';
 import { OrgDetails } from './OrgDetails';
+import { Library } from './Library';
 
 export type PageDefinition = {
   component: React.FC<AppRootProps>;
@@ -24,6 +25,12 @@ export const pages: PageDefinition[] = [
     icon: 'file-alt',
     id: 'browse',
     text: 'Browse',
+  },
+  {
+    component: Library,
+    icon: 'file-alt',
+    id: 'library',
+    text: 'Library',
   },
   {
     component: PluginDetails,

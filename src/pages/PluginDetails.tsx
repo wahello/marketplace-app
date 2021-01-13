@@ -13,6 +13,7 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
   const [plugin, setPlugin] = useState<Plugin>();
   const [versions, setVersions] = useState([]);
   const [installed, setInstalled] = useState(false);
+  const [development, setDevelopment] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tabs, setTabs] = useState([
     { label: 'Overview', active: true },
@@ -40,7 +41,10 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
     getBackendSrv()
       .get(`${API_ROOT}/installed?pluginDir=${pluginDir}`)
       .then((res: any[]) => {
-        setInstalled(!!res.find(_ => _ === slug));
+        const plugin = res.find(_ => _.id === slug);
+        setInstalled(!!plugin);
+        setDevelopment(!!plugin?.dev);
+        console.log(plugin);
       });
   }, [slug, pluginDir]);
 
@@ -120,13 +124,27 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
               {loading ? 'Installing' : 'Install'}
             </Button>
           )}
-          {installed && (
+          {installed && !development && (
             <Button variant="destructive" disabled={loading} onClick={onUninstall}>
               {loading ? 'Uninstalling' : 'Uninstall'}
             </Button>
           )}
-          &nbsp;&nbsp;
-          <a href={`https://grafana.com/plugins/${slug}`}>View on grafana.com</a>
+          {development && (
+            <p
+              className={css`
+                color: ${theme.colors.textSemiWeak};
+              `}
+            >
+              This is a development build of the plugin and can't be uninstalled.
+            </p>
+          )}
+          <div
+            className={css`
+              margin-top: ${theme.spacing.md};
+            `}
+          >
+            <a href={`https://grafana.com/plugins/${slug}`}>View on grafana.com</a>
+          </div>
         </div>
       </div>
       <TabsBar>

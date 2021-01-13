@@ -60,6 +60,13 @@ export const Browse = ({ query, meta }: AppRootProps) => {
 
   return (
     <>
+      <div
+        className={css`
+          margin-bottom: ${theme.spacing.lg};
+        `}
+      >
+        <h1>Browse</h1>
+      </div>
       <SearchField
         value={q}
         onSearch={q => {

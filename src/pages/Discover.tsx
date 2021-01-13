@@ -48,6 +48,13 @@ export const Discover = ({ meta }: AppRootProps) => {
 
   return (
     <>
+      <div
+        className={css`
+          margin-bottom: ${theme.spacing.lg};
+        `}
+      >
+        <h1>Discover</h1>
+      </div>
       <SearchField
         onSearch={q => {
           getLocationSrv().update({

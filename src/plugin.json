@@ -29,16 +29,23 @@
     },
     {
       "type": "page",
-      "name": "View plugin",
-      "path": "/a/grafana-marketplace-app?tab=plugin",
-      "role": "Viewer"
-    },
-    {
-      "type": "page",
       "name": "Browse plugins",
       "path": "/a/grafana-marketplace-app/?tab=browse",
       "role": "Viewer",
       "addToNav": true
+    },
+    {
+      "type": "page",
+      "name": "Library",
+      "path": "/a/grafana-marketplace-app/?tab=library",
+      "role": "Viewer",
+      "addToNav": true
+    },
+    {
+      "type": "page",
+      "name": "View plugin",
+      "path": "/a/grafana-marketplace-app?tab=plugin",
+      "role": "Viewer"
     }
   ],
   "dependencies": {

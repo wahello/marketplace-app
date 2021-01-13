@@ -122,7 +122,12 @@ func (srv *server) installed(w http.ResponseWriter, r *http.Request) {
 		pluginDir = "/var/lib/grafana/plugins"
 	}
 
-	ids := []string{}
+	type plugin struct {
+		ID          string `json:"id"`
+		Development bool   `json:"dev"`
+	}
+
+	plugins := []plugin{}
 
 	matches, err := filepath.Glob(pluginDir + "/*")
 	if err != nil {
@@ -134,9 +139,6 @@ func (srv *server) installed(w http.ResponseWriter, r *http.Request) {
 	for _, match := range matches {
 		fi, err := os.Stat(match)
 		if err != nil {
-			if os.IsNotExist(err) {
-				continue
-			}
 			srv.logger.Error(err.Error())
 			w.WriteHeader(http.StatusInternalServerError)
 			return
@@ -168,11 +170,20 @@ func (srv *server) installed(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		ids = append(ids, metadata.ID)
+		p := plugin{
+			ID: metadata.ID,
+		}
+
+		_, err = os.Stat(filepath.Join(match, ".git"))
+		if err == nil {
+			p.Development = true
+		}
+
+		plugins = append(plugins, p)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(ids); err != nil {
+	if err := json.NewEncoder(w).Encode(plugins); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
