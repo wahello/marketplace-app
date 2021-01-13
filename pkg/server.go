@@ -123,8 +123,15 @@ func (srv *server) installed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type plugin struct {
-		ID          string `json:"id"`
-		Development bool   `json:"dev"`
+		ID   string `json:"id"`
+		Info struct {
+			Version string `json:"version"`
+			Links   []struct {
+				Name string `json:"name"`
+				URL  string `json:"url"`
+			} `json:"links"`
+		} `json:"info"`
+		Development bool `json:"dev"`
 	}
 
 	plugins := []plugin{}
@@ -148,9 +155,7 @@ func (srv *server) installed(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		var metadata struct {
-			ID string `json:"id"`
-		}
+		var metadata plugin
 
 		if err := read(filepath.Join(match, "plugin.json"), &metadata); err != nil {
 			if os.IsNotExist(err) {
@@ -170,16 +175,12 @@ func (srv *server) installed(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		p := plugin{
-			ID: metadata.ID,
-		}
-
 		_, err = os.Stat(filepath.Join(match, ".git"))
 		if err == nil {
-			p.Development = true
+			metadata.Development = true
 		}
 
-		plugins = append(plugins, p)
+		plugins = append(plugins, metadata)
 	}
 
 	w.Header().Set("Content-Type", "application/json")

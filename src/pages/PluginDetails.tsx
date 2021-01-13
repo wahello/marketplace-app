@@ -9,11 +9,25 @@ import { MarketplaceAppSettings, Plugin } from '../types';
 
 import {} from '@emotion/core';
 
+interface Metadata {
+  info: {
+    version: string;
+    links: {
+      name: string;
+      url: string;
+    }[];
+  };
+  dev: boolean;
+}
+
 export const PluginDetails = ({ query, meta }: AppRootProps) => {
-  const [plugin, setPlugin] = useState<Plugin>();
-  const [versions, setVersions] = useState([]);
+  const [remotePlugin, setRemotePlugin] = useState<Plugin>();
+  const [remoteVersions, setRemoteVersions] = useState([]);
+
+  const [localPlugin, setLocalPlugin] = useState<Metadata>();
+
   const [installed, setInstalled] = useState(false);
-  const [development, setDevelopment] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [tabs, setTabs] = useState([
     { label: 'Overview', active: true },
@@ -29,13 +43,13 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
     getBackendSrv()
       .get(`${API_ROOT}/plugins/${slug}`)
       .then(res => {
-        setPlugin(res);
+        setRemotePlugin(res);
       });
 
     getBackendSrv()
       .get(`${API_ROOT}/plugins/${slug}/versions`)
       .then(res => {
-        setVersions(res.items);
+        setRemoteVersions(res.items);
       });
 
     getBackendSrv()
@@ -43,7 +57,7 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
       .then((res: any[]) => {
         const plugin = res.find(_ => _.id === slug);
         setInstalled(!!plugin);
-        setDevelopment(!!plugin?.dev);
+        setLocalPlugin(plugin);
       });
   }, [slug, pluginDir]);
 
@@ -52,7 +66,10 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
     getBackendSrv()
       .post(
         `${API_ROOT}/install`,
-        JSON.stringify({ url: `${GRAFANA_API_ROOT}/plugins/${slug}/versions/${plugin?.version}/download`, pluginDir })
+        JSON.stringify({
+          url: `${GRAFANA_API_ROOT}/plugins/${slug}/versions/${remotePlugin?.version}/download`,
+          pluginDir,
+        })
       )
       .then(() => {
         setInstalled(true);
@@ -83,7 +100,7 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
         `}
       >
         <img
-          src={`${GRAFANA_API_ROOT}/plugins/${slug}/versions/${plugin?.version}/logos/small`}
+          src={`${GRAFANA_API_ROOT}/plugins/${slug}/versions/${remotePlugin?.version}/logos/small`}
           className={css`
             max-width: 128px;
             max-height: 128px;
@@ -94,41 +111,58 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
             margin-left: ${theme.spacing.lg};
           `}
         >
-          <h1>{plugin?.name}</h1>
+          <h1>{remotePlugin?.name}</h1>
           <div
             className={css`
               display: flex;
               align-items: center;
               margin-top: ${theme.spacing.sm};
               margin-bottom: ${theme.spacing.lg};
+              & > * {
+                &::after {
+                  content: '|';
+                  padding: 0 ${theme.spacing.md};
+                }
+              }
+              & > *:last-child {
+                &::after {
+                  content: '';
+                  padding-right: 0;
+                }
+              }
+              font-size: ${theme.typography.size.lg};
             `}
           >
             <a
               className={css`
                 font-size: ${theme.typography.size.lg};
               `}
-              href={`${PLUGIN_ROOT}?tab=org&orgSlug=${plugin?.orgSlug}`}
+              href={`${PLUGIN_ROOT}?tab=org&orgSlug=${remotePlugin?.orgSlug}`}
             >
-              {plugin?.orgName}
+              {remotePlugin?.orgName}
             </a>
+            {localPlugin?.info?.links?.map((link: any) => (
+              <a href={link.url}>{link.name}</a>
+            ))}
+            <span>
+              <Icon name="cloud-download" />
+              &nbsp;
+              {remotePlugin && `${new Intl.NumberFormat().format(remotePlugin.downloads)}`}
+            </span>
+            {localPlugin?.info && <span>{localPlugin?.info?.version}</span>}
           </div>
-          <p>{plugin?.description}</p>
-          <p>
-            <Icon name="download-alt" />
-            &nbsp;
-            {plugin?.downloads} downloads
-          </p>
+          <p>{remotePlugin?.description}</p>
           {!installed && (
             <Button disabled={installed || loading} onClick={onInstall}>
               {loading ? 'Installing' : 'Install'}
             </Button>
           )}
-          {installed && !development && (
+          {installed && !localPlugin?.dev && (
             <Button variant="destructive" disabled={loading} onClick={onUninstall}>
               {loading ? 'Uninstalling' : 'Uninstall'}
             </Button>
           )}
-          {development && (
+          {localPlugin?.dev && (
             <p
               className={css`
                 color: ${theme.colors.textSemiWeak};
@@ -167,7 +201,7 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
               }
               margin: ${theme.spacing.lg} 0;
             `}
-            dangerouslySetInnerHTML={{ __html: plugin?.readme ?? '' }}
+            dangerouslySetInnerHTML={{ __html: remotePlugin?.readme ?? '' }}
           ></div>
         )}
         {tabs.find(_ => _.label === 'Version history')?.active && (
@@ -187,7 +221,7 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
               </tr>
             </thead>
             <tbody>
-              {versions.map((_: any) => {
+              {remoteVersions.map((_: any) => {
                 return (
                   <tr>
                     <td>{_.version}</td>
