@@ -44,7 +44,6 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
         const plugin = res.find(_ => _.id === slug);
         setInstalled(!!plugin);
         setDevelopment(!!plugin?.dev);
-        console.log(plugin);
       });
   }, [slug, pluginDir]);
 
