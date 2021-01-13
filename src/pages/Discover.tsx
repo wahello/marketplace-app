@@ -60,7 +60,7 @@ export const Discover = ({ meta }: AppRootProps) => {
           getLocationSrv().update({
             partial: true,
             replace: true,
-            query: { q },
+            query: { q, tab: 'browse' },
           });
         }}
       />
