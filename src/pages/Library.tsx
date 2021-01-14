@@ -30,7 +30,7 @@ export const Library = ({ meta }: AppRootProps) => {
       .then((res: any[]) => {
         setInstalled(res);
       });
-  }, [showUnsigned]);
+  }, [pluginDir, showUnsigned]);
 
   return (
     <>

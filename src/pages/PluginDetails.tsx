@@ -1,5 +1,5 @@
 import { AppRootProps, dateTimeFormatTimeAgo, GrafanaTheme } from '@grafana/data';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {} from '@emotion/core';
 import { getBackendSrv } from '@grafana/runtime';
 import { useTheme, TabsBar, TabContent, Tab, Button, Icon, stylesFactory, Select } from '@grafana/ui';
@@ -14,10 +14,10 @@ import {} from '@emotion/core';
 interface Metadata {
   info: {
     version: string;
-    links: {
+    links: Array<{
       name: string;
       url: string;
-    }[];
+    }>;
   };
   dev: boolean;
 }
@@ -38,7 +38,7 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
   const theme = useTheme();
   const styles = getStyles(theme);
 
-  const refresh = () => {
+  const refresh = useCallback(() => {
     getBackendSrv()
       .get(`${API_ROOT}/plugins/${slug}`)
       .then(res => {
@@ -57,11 +57,11 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
         const plugin = res.find(_ => _.id === slug);
         setLocalPlugin(plugin);
       });
-  };
+  }, [pluginDir, slug]);
 
   useEffect(() => {
     refresh();
-  }, [slug, pluginDir]);
+  }, [refresh]);
 
   const description = remotePlugin?.description;
   const readme = remotePlugin?.readme;
@@ -192,7 +192,7 @@ export const getStyles = stylesFactory((theme: GrafanaTheme) => {
 });
 
 interface VersionListProps {
-  versions: { version: string; createdAt: string }[];
+  versions: Array<{ version: string; createdAt: string }>;
 }
 
 const VersionList = ({ versions }: VersionListProps) => {
@@ -250,7 +250,7 @@ const InstallControls = ({ localPlugin, remotePlugin, slug, pluginDir, onRefresh
       .post(
         `${API_ROOT}/install`,
         JSON.stringify({
-          url: `https://grafana.com/${downloadUrl}`,
+          url: `https://grafana.com/api${downloadUrl}`,
           pluginDir,
         })
       )
@@ -299,6 +299,7 @@ const InstallControls = ({ localPlugin, remotePlugin, slug, pluginDir, onRefresh
   const isInternal = remotePlugin?.internal;
   const hasPackages = Object.keys(remotePlugin?.packages ?? {}).length > 1;
   const isInstalled = !!localPlugin;
+  const defaultDownloadUrl = remotePlugin.links.find(_ => _.rel === 'download')?.href;
 
   const archOptions = Object.values(remotePlugin?.packages ?? {}).map(_ => ({
     label: _.packageName,
@@ -348,10 +349,12 @@ const InstallControls = ({ localPlugin, remotePlugin, slug, pluginDir, onRefresh
   }
 
   if (unsupportedGrafanaVersion) {
-    <div className={styles.message}>
-      <Icon name="exclamation-triangle" />
-      &nbsp;This plugin doesn't support your version of Grafana.
-    </div>;
+    return (
+      <div className={styles.message}>
+        <Icon name="exclamation-triangle" />
+        &nbsp;This plugin doesn't support your version of Grafana.
+      </div>
+    );
   }
 
   if (hasPackages) {
@@ -376,8 +379,8 @@ const InstallControls = ({ localPlugin, remotePlugin, slug, pluginDir, onRefresh
 
   return (
     <>
-      {remotePlugin.packages?.any?.downloadUrl ? (
-        <Button disabled={loading} onClick={() => onInstall(remotePlugin.packages?.any.downloadUrl)}>
+      {defaultDownloadUrl ? (
+        <Button disabled={loading} onClick={() => onInstall(defaultDownloadUrl)}>
           {loading ? 'Installing' : 'Install'}
         </Button>
       ) : null}

@@ -27,20 +27,20 @@ export type Plugin = {
       downloadUrl: string;
     };
   };
-  links: {
+  links: Array<{
     rel: string;
     href: string;
-  }[];
+  }>;
   json: {
     dependencies: {
       grafanaDependency: string;
       grafanaVersion: string;
     };
     info: {
-      links: {
+      links: Array<{
         name: string;
         url: string;
-      }[];
+      }>;
     };
   };
 };
