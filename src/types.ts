@@ -19,5 +19,28 @@ export type Plugin = {
   typeCode: string;
   featured: number;
   readme: string;
+  internal: boolean;
   versionSignatureType: string;
+  packages: {
+    [arch: string]: {
+      packageName: string;
+      downloadUrl: string;
+    };
+  };
+  links: {
+    rel: string;
+    href: string;
+  }[];
+  json: {
+    dependencies: {
+      grafanaDependency: string;
+      grafanaVersion: string;
+    };
+    info: {
+      links: {
+        name: string;
+        url: string;
+      }[];
+    };
+  };
 };
