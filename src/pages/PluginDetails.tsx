@@ -9,6 +9,11 @@ import { MarketplaceAppSettings, Plugin } from '../types';
 import { config } from '@grafana/runtime';
 import { gt, satisfies } from 'semver';
 
+// This isn't exported in the sdk yet
+// @ts-ignore
+import appEvents from 'grafana/app/core/app_events';
+import { AppEvents } from '@grafana/data';
+
 import {} from '@emotion/core';
 
 interface Metadata {
@@ -257,6 +262,7 @@ const InstallControls = ({ localPlugin, remotePlugin, slug, pluginDir, onRefresh
       .finally(() => {
         setLoading(false);
         onRefresh();
+        appEvents.emit(AppEvents.alertSuccess, [`Installed ${remotePlugin?.name}`]);
       });
   };
 
@@ -286,6 +292,7 @@ const InstallControls = ({ localPlugin, remotePlugin, slug, pluginDir, onRefresh
       .finally(() => {
         setLoading(false);
         onRefresh();
+        appEvents.emit(AppEvents.alertSuccess, [`Uninstalled ${remotePlugin?.name}`]);
       });
   };
 
