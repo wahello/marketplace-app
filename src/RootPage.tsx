@@ -15,10 +15,10 @@ export const MarketplaceRootPage = React.memo(function MarketplaceRootPage(props
   return (
     <div
       className={css`
-        margin-top: 20px;
         margin-left: auto;
         margin-right: auto;
         max-width: 980px;
+        padding: 48px 16px;
       `}
     >
       <Page {...props} path={pathWithoutLeadingSlash} />

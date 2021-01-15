@@ -15,7 +15,7 @@ export const PluginList = ({ plugins }: Props) => {
   const theme = useTheme();
 
   return (
-    <Grid columns={5}>
+    <Grid>
       {plugins.map(plugin => {
         const { name, slug, version, orgName } = plugin;
 
@@ -26,14 +26,17 @@ export const PluginList = ({ plugins }: Props) => {
                 className={css`
                   display: flex;
                   flex-direction: column;
-                  min-height: 10rem;
+                  justify-content: space-around;
+                  height: 100%;
                 `}
               >
                 <div
                   className={css`
                     flex-grow: 1;
-                    padding: ${theme.spacing.md} ${theme.spacing.xl};
-                    text-align: center;
+                    padding: ${theme.spacing.sm} 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                   `}
                 >
                   <img
@@ -59,6 +62,9 @@ export const PluginList = ({ plugins }: Props) => {
                   className={css`
                     font-size: ${theme.typography.size.md};
                     color: ${theme.colors.textSemiWeak};
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                     text-align: center;
                   `}
                 >

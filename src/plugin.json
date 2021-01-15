@@ -29,7 +29,7 @@
     },
     {
       "type": "page",
-      "name": "Browse plugins",
+      "name": "Browse",
       "path": "/a/grafana-marketplace-app/?tab=browse",
       "role": "Viewer",
       "addToNav": true

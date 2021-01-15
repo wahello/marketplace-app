@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import {} from '@emotion/core';
 import { getBackendSrv, getLocationSrv } from '@grafana/runtime';
 import { PluginList } from '../components/PluginList';
-import { useTheme, Legend, stylesFactory } from '@grafana/ui';
+import { useTheme, Legend, stylesFactory, Button } from '@grafana/ui';
 import { dateTimeParse } from '@grafana/data';
-import { css } from 'emotion';
+import { cx, css } from 'emotion';
 import { Card } from '../components/Card';
 import { SearchField } from '../components/SearchField';
 import { Grid } from '../components/Grid';
@@ -48,13 +48,6 @@ export const Discover = ({ meta }: AppRootProps) => {
 
   return (
     <>
-      <div
-        className={css`
-          margin-bottom: ${theme.spacing.lg};
-        `}
-      >
-        <h1>Discover</h1>
-      </div>
       <SearchField
         onSearch={q => {
           getLocationSrv().update({
@@ -76,18 +69,24 @@ export const Discover = ({ meta }: AppRootProps) => {
         className={css`
           display: flex;
           justify-content: space-between;
-          align-items: center;
+          align-items: baseline;
         `}
       >
         <Legend className={styles.legend}>Most popular</Legend>
-        <div
-          className={css`
-            min-width: 8ch;
-            font-weight: 500;
-          `}
+        <Button
+          onClick={() => {
+            getLocationSrv().update({
+              partial: true,
+              replace: false,
+              query: {
+                tab: 'browse',
+                sortBy: 'popularity',
+              },
+            });
+          }}
         >
-          <a href={`${PLUGIN_ROOT}?tab=browse&sortBy=popularity`}>See more</a>
-        </div>
+          See more
+        </Button>
       </div>
       <PluginList
         plugins={mostPopular.filter((_, idx) => {
@@ -99,34 +98,64 @@ export const Discover = ({ meta }: AppRootProps) => {
         className={css`
           display: flex;
           justify-content: space-between;
-          align-items: center;
+          align-items: baseline;
         `}
       >
         <Legend className={styles.legend}>Recently added</Legend>
-        <div
-          className={css`
-            min-width: 8ch;
-            font-weight: 500;
-          `}
+        <Button
+          onClick={() => {
+            getLocationSrv().update({
+              partial: true,
+              replace: false,
+              query: {
+                tab: 'browse',
+                sortBy: 'published',
+              },
+            });
+          }}
         >
-          <a href={`${PLUGIN_ROOT}?tab=browse&sortBy=published`}>See more</a>
-        </div>
+          See more
+        </Button>
       </div>
       <PluginList
         plugins={recentlyAdded.filter((_, idx) => {
           return idx < 5;
         })}
       />
-      <Legend className={styles.legend}>Browse by type</Legend>
-      <Grid columns={3}>
+      <Legend className={cx(styles.legend)}>Browse by type</Legend>
+      <Grid>
         <a href={`${PLUGIN_ROOT}?tab=browse&filterBy=panel`}>
-          <Card>Panels</Card>
+          <Card>
+            <span
+              className={css`
+                font-size: ${theme.typography.size.lg};
+              `}
+            >
+              Panels
+            </span>
+          </Card>
         </a>
         <a href={`${PLUGIN_ROOT}?tab=browse&filterBy=datasource`}>
-          <Card>Data sources</Card>
+          <Card>
+            <span
+              className={css`
+                font-size: ${theme.typography.size.lg};
+              `}
+            >
+              Data sources
+            </span>
+          </Card>
         </a>
         <a href={`${PLUGIN_ROOT}?tab=browse&filterBy=app`}>
-          <Card>Apps</Card>
+          <Card>
+            <span
+              className={css`
+                font-size: ${theme.typography.size.lg};
+              `}
+            >
+              Apps
+            </span>
+          </Card>
         </a>
       </Grid>
     </>

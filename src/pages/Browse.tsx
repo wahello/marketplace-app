@@ -27,7 +27,7 @@ export const Browse = ({ query, meta }: AppRootProps) => {
   const onSortByChange = (value: SelectableValue<string>) => {
     getLocationSrv().update({
       partial: true,
-      replace: true,
+      replace: false,
       query: {
         sortBy: value.value,
       },
@@ -37,7 +37,7 @@ export const Browse = ({ query, meta }: AppRootProps) => {
   const onFilterByChange = (value: SelectableValue<string>) => {
     getLocationSrv().update({
       partial: true,
-      replace: true,
+      replace: false,
       query: {
         filterBy: value.value,
       },
@@ -60,19 +60,12 @@ export const Browse = ({ query, meta }: AppRootProps) => {
 
   return (
     <>
-      <div
-        className={css`
-          margin-bottom: ${theme.spacing.lg};
-        `}
-      >
-        <h1>Browse</h1>
-      </div>
       <SearchField
         value={q}
         onSearch={q => {
           getLocationSrv().update({
             partial: true,
-            replace: true,
+            replace: false,
             query: { q },
           });
         }}
@@ -111,7 +104,7 @@ export const Browse = ({ query, meta }: AppRootProps) => {
           `}
         >
           <Select
-            width={15}
+            width={20}
             value={sortBy || 'name'}
             onChange={onSortByChange}
             options={[

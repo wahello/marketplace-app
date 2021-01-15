@@ -23,7 +23,7 @@ export const SearchField = ({ value, onSearch }: Props) => {
         outline: none;
         font-size: 20px;
         width: 100%;
-        border-bottom: 2px solid rgb(32, 34, 38);
+        border-bottom: 2px solid ${theme.colors.border1};
         background: transparent;
         line-height: 38px;
         font-weight: 400;

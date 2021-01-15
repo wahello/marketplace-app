@@ -86,8 +86,10 @@ export const PluginDetails = ({ query, meta }: AppRootProps) => {
         <img
           src={`${GRAFANA_API_ROOT}/plugins/${slug}/versions/${remotePlugin?.version}/logos/small`}
           className={css`
+            object-fit: cover;
+            width: 100%;
+            height: 128px;
             max-width: 128px;
-            max-height: 128px;
           `}
         />
         <div
